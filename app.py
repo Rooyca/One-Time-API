@@ -4,8 +4,7 @@ import yaml
 import random
 from pymongo import MongoClient
 from werkzeug.utils import secure_filename
-from multiprocessing.pool import ThreadPool
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify, send_file, after_this_request
 from azure.storage.blob import BlobServiceClient, ContainerClient
  
 app = Flask(__name__)
@@ -31,8 +30,6 @@ def allowed_file(filename):
 
 class AzureBlobFileDownloader:
   def __init__(self):
-    print("Intializing AzureBlobFileDownloader")
-
     # Initialize the connection to Azure storage account
     self.blob_service_client =  BlobServiceClient.from_connection_string(conn_string)
     self.my_container = self.blob_service_client.get_container_client(container)
@@ -76,21 +73,30 @@ def upload_file():
 def upload(file, conn_string, container):
     blob_client = container_client.get_blob_client(secure_filename(file.filename))
     blob_client.upload_blob(file)
-    print("[*] Upload one file.")
 
 @app.route('/download/<idf>')
 def download_file(idf):
     idf_search = db.file_id.find_one({"_id":int(idf)})
-    print(idf_search)
+
+    @after_this_request
+    def removing_file(response):
+        try:
+            db.file_id.delete_one({"_id":int(idf)})
+            container_client.delete_blob(blob=blob_name)
+            file_path = os.path.dirname(os.path.abspath(__file__))
+            os.remove(file_path+"/"+blob_name)
+        except Exception as error:
+            app.logger.error("Error removing or closing downloaded file handle", error)
+        return response
+
     if idf_search:
         blob_name = idf_search['name']
         azure_blob_file_downloader = AzureBlobFileDownloader()
         file_downloaded = azure_blob_file_downloader.save_blob_locally(blob_name)
-        db.file_id.delete_one({"_id":int(idf)})
-        container_client.delete_blob(blob=blob_name)
         return send_file(file_downloaded)
+
     else:
-            return jsonify({'Error':'ID file not Found'}),404
+        return jsonify({'Error':'ID file not Found'}),404
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0')
