@@ -66,7 +66,7 @@ def upload_file():
                 "_id" : idf,
                 "name" : filename
             })
-            return jsonify({f'ID {idf}' : 'File(s) successfully uploaded'}),201
+            return jsonify({'ID' : f'{idf}'}),201
         else:
             return jsonify({(file.filename) : 'File type is not allowed'}),415
 
