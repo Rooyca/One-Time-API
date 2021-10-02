@@ -21,7 +21,7 @@ container = load['uploads_container_name']
 container_client = ContainerClient.from_connection_string(conn_string, container)
 mongo_client = load['mongodb_client']
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'rar', 'zip', 'gzip'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'rar', 'zip', 'gzip', 'mp3', 'mp4', '3gp'])
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024 #16 MEGABYTES
 db = MongoClient(mongo_client).thingsTD.file_id
 
