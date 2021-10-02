@@ -1,0 +1,5 @@
+---
+# Clave : p07pDLVMPyjeIqJOsnjqFETzp6FtYejQqg5GJhrneR2mxYqimB3c9y9tmhGcGbRbATDVX+iDgTqrWkoAttgyxA==
+azure_storage_connectionstring: DefaultEndpointsProtocol=https;AccountName=justone;AccountKey=jNsx0nUj1itB6YB11tYE8o+ekae13WAQojjNHv4RSMhmuFMqzglIlyyqDNDcSYXfJ0hvCMXuSk1skH+y3Owv7Q==;EndpointSuffix=core.windows.net
+uploads_container_name: "uploads"
+mongodb_client: mongodb+srv://rooyca:H4ndly$@todov1.7dk8a.mongodb.net/thingsTD?retryWrites=true&w=majority
