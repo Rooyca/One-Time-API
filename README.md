@@ -16,7 +16,7 @@ python app.py
 **Here comes the tricky part...**
 
 You will need two more things:
-1. Azure and a MongoDB account.
+1. Azure and a Redis account.
 2. A "config.yaml" file to save your credentials.
 
 Well, once we have everythin set it's importa to know that there are two endpoints: "/upload" and "/download/<id>". 
